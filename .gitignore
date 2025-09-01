@@ -1,0 +1,15 @@
+# Archivos compilados de Java
+*.class
+
+# Archivos compilados de C++
+*.exe
+*.out
+*.o
+
+# Archivos de Visual Basic compilados
+bin/
+obj/
+
+# Archivos temporales de Windows
+*.log
+Thumbs.db
