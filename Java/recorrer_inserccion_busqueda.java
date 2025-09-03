@@ -1,6 +1,6 @@
 import java.util.Arrays;
 import java.util.Scanner;
-public class recorrer {
+public class recorrer_inserccion_busqueda {
     public static void main(String[] args) {
         int[] a = {10,20,30,400,5};
 
