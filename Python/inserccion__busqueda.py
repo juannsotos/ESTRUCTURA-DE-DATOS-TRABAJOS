@@ -1,3 +1,4 @@
+#Para agregar un valor
 array = [2,4,5,67,43,34,6]  
 
 valor =  int(input("Ingresa el valor que deseas agregar; "))
@@ -9,10 +10,10 @@ for i in range(len(array)-1,n,-1):
 array[n] = valor
 print(array)
 
-
+#Para buscar el numero
 print("\n Busqueda de numero")
 #Esto es otra cosa
-num = int(input("Coloca el numero a comparar: "))
+num = int(input("Coloca el numero a buscar: "))
 arr1 = [450,403,340,213,12,5]
 
 def buscar_numero_en_arreglo(arr1,num):
