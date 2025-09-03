@@ -8,9 +8,11 @@ public class recorrer {
         System.err.println("Posicion " + i + " Valor " + a[i]);
     }
 
-
-        int[] b = {30,50,80,100,30,22};
+  
+    
         Scanner sc = new Scanner(System.in);
+        int[] b = {30,50,80,100,30,22};
+      
           System.out.print("Ingresa el número a buscar: ");
         int numero = sc.nextInt();
 
@@ -61,7 +63,7 @@ public class recorrer {
         c[indice] = valor;
         System.out.println(c);
         return c;
-        
+
         }
 
     } 
