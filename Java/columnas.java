@@ -10,7 +10,7 @@ public class columnas {
         int[] arr = new int[r*c];
         for(int y = 0; y < c; y++){
             for(int x = 0; x < r; x++){
-                 int k = y * r + x;
+                 int k = y * r + x; //Esto es de formula
                  arr[k] = TwoArray[x][y];
             }
         }
