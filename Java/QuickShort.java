@@ -2,7 +2,7 @@ import java.util.Random;
 import java.util.Arrays;
 public class QuickShort {
 
-      public static void swap(int[] arreglo, int i, int j) {
+    public static void swap(int[] arreglo, int i, int j) {
         int temp = arreglo[i];  // 1. Guardamos el valor del primer elemento en una variable temporal.
         arreglo[i] = arreglo[j];  // 2. Reemplazamos el valor del primer elemento con el del segundo.
         arreglo[j] = temp; // 3. Asignamos el valor guardado (original del primer elemento) al segundo.

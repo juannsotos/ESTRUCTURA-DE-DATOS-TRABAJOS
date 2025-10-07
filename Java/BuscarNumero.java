@@ -10,6 +10,7 @@ public class BuscarNumero {
         for (int elemento : misNumeros) {
             if (elemento == edad) {
                 encontrado = true;
+                
                 break; // Se rompe el ciclo, porque ya se encontro el número 15
             }
         }
