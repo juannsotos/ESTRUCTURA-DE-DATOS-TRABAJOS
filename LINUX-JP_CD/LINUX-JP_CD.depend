@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1765317129 source:c:\users\me\desktop\c++ goku\linux-jp_cd\main.cpp
+	<iostream>
+	<string>
+	"FileSystem.h"
+
+1765317517 c:\users\me\desktop\c++ goku\linux-jp_cd\filesystem.h
+	<iostream>
+	<vector>
+	<string>
+	<algorithm>
+
