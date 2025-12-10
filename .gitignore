@@ -13,3 +13,7 @@ obj/
 # Archivos temporales de Windows
 *.log
 Thumbs.db
+
+# Archivos de configuracion de Code::Blocks
+*.layout
+*.depend
