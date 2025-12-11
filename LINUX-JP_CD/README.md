@@ -14,3 +14,5 @@ Simulador de consola de comandos (Linux/CMD) implementado en C++ utilizando árb
 - `touch <nombre>`: Crea un archivo.
 - `ls`: Muestra el contenido del directorio actual.
 - `cd <nombre>`: Navega entre carpetas.
+- `rm <nombre>`: Elimina la carpeta / archivo
+- `mv <origen> <destino>`: Mueve un archivo / carpeta a otra ubicacion

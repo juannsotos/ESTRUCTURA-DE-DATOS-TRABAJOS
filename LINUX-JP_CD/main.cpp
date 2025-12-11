@@ -38,6 +38,15 @@ int main() {
             cin >> argumento;
             fs.cd(argumento);
         }
+        else if (comando == "rm") {
+            cin >> argumento;
+            fs.rm(argumento);
+        }
+        else if (comando == "mv") {
+            string destino;
+            cin >> argumento >> destino; // mv necesita dos argumentos
+            fs.mv(argumento, destino);
+        }
         else {
             cout << "Comando desconocido.\n";
             // Limpiar buffer por si metieron espacios
