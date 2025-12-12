@@ -10,6 +10,7 @@ int main() {
 
     cout << "=== MINI TERMINAL (Simulador de Arboles) ===\n";
     cout << "Comandos: mkdir <nombre>, touch <nombre>, ls, cd <nombre>, pwd, exit\n";
+    cout << "Comandos: save, load \n";
 
     while (true) {
         cout << "\nuser@console: ";
@@ -46,6 +47,12 @@ int main() {
             string destino;
             cin >> argumento >> destino; // mv necesita dos argumentos
             fs.mv(argumento, destino);
+        }
+        else if (comando == "save") {
+            fs.save();
+        }
+        else if (comando == "load") {
+            fs.load();
         }
         else {
             cout << "Comando desconocido.\n";

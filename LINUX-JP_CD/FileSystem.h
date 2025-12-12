@@ -5,6 +5,9 @@
 #include <vector>
 #include <string>
 #include <algorithm> // Para buscar en vectores
+#include <fstream>
+#include "json.hpp"
+using json = nlohmann::json; // Para escribir menos
 
 using namespace std;
 
@@ -37,6 +40,47 @@ class FileSystem {
 private:
     Nodo* raiz;
     Nodo* actual; // Puntero que dice "en que carpeta estoy parado"
+
+    // --- AYUDANTE 1: Convertir de NODO -> JSON (Recursivo) ---
+    json nodoAJson(Nodo* nodo) {
+        json j;
+        j["nombre"] = nodo->nombre;
+        j["tipo"] = nodo->esCarpeta ? "carpeta" : "archivo";
+
+        if (!nodo->esCarpeta) {
+            j["contenido"] = nodo->contenido;
+        }
+
+        // Magia recursiva: Guardar los hijos
+        j["hijos"] = json::array(); // Crea lista vacía []
+        for (Nodo* hijo : nodo->hijos) {
+            j["hijos"].push_back(nodoAJson(hijo)); // Se llama a sí misma
+        }
+        return j;
+    }
+
+    // --- AYUDANTE 2: Convertir de JSON -> NODO (Recursivo) ---
+    Nodo* jsonANodo(json j, Nodo* padre) {
+        string nombre = j["nombre"];
+        string tipo = j["tipo"];
+        bool esCarpeta = (tipo == "carpeta");
+
+        // Crear el nodo actual
+        Nodo* nuevo = new Nodo(nombre, esCarpeta, padre);
+
+        if (!esCarpeta && j.contains("contenido")) {
+            nuevo->contenido = j["contenido"];
+        }
+
+        // Reconstruir los hijos
+        if (j.contains("hijos")) {
+            for (auto& item : j["hijos"]) {
+                Nodo* hijo = jsonANodo(item, nuevo); // Recursión
+                nuevo->hijos.push_back(hijo);
+            }
+        }
+        return nuevo;
+    }
 
 public:
     FileSystem() {
@@ -184,6 +228,40 @@ public:
         nodoMover->padre = nodoDestino; // Actualizar su nuevo padre
 
         cout << "Se movio '" << nombreOrigen << "' a '" << nombreDestino << "'.\n";
+    }
+
+    void save() {
+        json j = nodoAJson(raiz); // Convierte todo el árbol a JSON
+
+        ofstream archivo("sistema.json");
+        if (archivo.is_open()) {
+            archivo << j.dump(4); // El 4 es para que se vea bonito (indentación)
+            archivo.close();
+            cout << "Sistema guardado en 'sistema.json'.\n";
+        } else {
+            cout << "Error al crear archivo.\n";
+        }
+    }
+
+    // --- CARGAR (LOAD) ---
+    void load() {
+        ifstream archivo("sistema.json");
+        if (archivo.is_open()) {
+            json j;
+            archivo >> j; // ¡Aquí la librería hace todo el trabajo difícil!
+
+            // Borramos el árbol viejo para no encimar datos
+            delete raiz;
+
+            // Construimos el nuevo árbol desde el JSON
+            raiz = jsonANodo(j, nullptr);
+            actual = raiz; // Reseteamos la posición a la raíz
+
+            cout << "Sistema cargado exitosamente.\n";
+            archivo.close();
+        } else {
+            cout << "Error: No existe el archivo 'sistema.json'.\n";
+        }
     }
 };
 
