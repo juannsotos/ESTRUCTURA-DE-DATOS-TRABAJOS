@@ -1,6 +1,7 @@
 #ifndef FILESYSTEM_H
 #define FILESYSTEM_H
 
+#include "Trie.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -40,6 +41,7 @@ class FileSystem {
 private:
     Nodo* raiz;
     Nodo* actual; // Puntero que dice "en que carpeta estoy parado"
+    Trie buscador;
 
     // --- AYUDANTE 1: Convertir de NODO -> JSON (Recursivo) ---
     json nodoAJson(Nodo* nodo) {
@@ -100,6 +102,7 @@ public:
         // Crear nueva carpeta y conectarla
         Nodo* nuevaCarpeta = new Nodo(nombre, true, actual);
         actual->hijos.push_back(nuevaCarpeta);
+        buscador.insertar(nombre);  //Aqui se guarda el nombre en el indice
         cout << "Carpeta '" << nombre << "' creada.\n";
     }
 
@@ -113,7 +116,22 @@ public:
         }
         Nodo* nuevoArchivo = new Nodo(nombre, false, actual);
         actual->hijos.push_back(nuevoArchivo);
+        buscador.insertar(nombre);
         cout << "Archivo '" << nombre << "' creado.\n";
+    }
+
+        // --- COMANDO : search
+    void search(string prefijo) {
+        vector<string> resultados = buscador.buscarPorPrefijo(prefijo);
+
+        if (resultados.empty()) {
+            cout << "No se encontraron coincidencias para '" << prefijo << "'.\n";
+        } else {
+            cout << "Resultados de busqueda:\n";
+            for (string s : resultados) {
+                cout << " - " << s << endl;
+            }
+        }
     }
 
     // --- COMANDO: ls (Listar contenido) ---

@@ -26,3 +26,9 @@ Simulador de consola de comandos (Linux/CMD) implementado en C++ utilizando árb
   - Restaura el arbol de directorios exactamente como estaba la ultima vez.
   - **Nota:** Al usar este comando, se borra cualquier cambio no guardado en la sesión actual para reemplazarlo con la versión del archivo.
 
+### Búsqueda Inteligente (Día 5-6)
+
+- `search <prefijo>`: Busca y lista todos los archivos o carpetas que comiencen con las letras indicadas.
+  - **Estructura de Datos:** Implementado mediante un **Trie (Árbol de Prefijos)**. Esto permite encontrar coincidencias de manera inmediata sin tener que recorrer todo el arbol de carpetas una por una.
+  - **Autocompletado:** Funciona como un motor de sugerencias; si escribes `search m`, el sistema te devolverá todo lo que empiece con "m" (ej: `musica`, `memes`, `main.cpp`).
+

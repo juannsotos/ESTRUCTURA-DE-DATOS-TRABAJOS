@@ -10,12 +10,13 @@
 	<string>
 	<algorithm>
 
-1765436415 source:c:\users\me\documents\github\estructura-de-datos-trabajos\linux-jp_cd\main.cpp
+1765590415 source:c:\users\me\documents\github\estructura-de-datos-trabajos\linux-jp_cd\main.cpp
 	<iostream>
 	<string>
 	"FileSystem.h"
 
-1765436388 c:\users\me\documents\github\estructura-de-datos-trabajos\linux-jp_cd\filesystem.h
+1765590607 c:\users\me\documents\github\estructura-de-datos-trabajos\linux-jp_cd\filesystem.h
+	"Trie.h"
 	<iostream>
 	<vector>
 	<string>
@@ -221,4 +222,10 @@
 	<vector>
 	<any>
 	<string_view>
+
+1765589942 c:\users\me\documents\github\estructura-de-datos-trabajos\linux-jp_cd\trie.h
+	<iostream>
+	<vector>
+	<map>
+	<string>
 

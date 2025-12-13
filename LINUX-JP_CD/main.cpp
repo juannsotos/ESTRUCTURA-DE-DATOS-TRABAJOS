@@ -54,6 +54,10 @@ int main() {
         else if (comando == "load") {
             fs.load();
         }
+        else if (comando == "search"){
+            cin >> argumento;
+            fs.search(argumento);
+        }
         else {
             cout << "Comando desconocido.\n";
             // Limpiar buffer por si metieron espacios
