@@ -8,8 +8,8 @@
 #include <algorithm> // Para buscar en vectores
 #include <fstream>
 #include "json.hpp"
-using json = nlohmann::json; // Para escribir menos
 
+using json = nlohmann::json; // Para escribir menos
 using namespace std;
 
 //  ---- ESTRUCTURA DEL NODO DIA 1 ----
@@ -41,6 +41,7 @@ class FileSystem {
 private:
     Nodo* raiz;
     Nodo* actual; // Puntero que dice "en que carpeta estoy parado"
+    Nodo* papelera;
     Trie buscador;
 
     // --- AYUDANTE 1: Convertir de NODO -> JSON (Recursivo) ---
@@ -88,6 +89,10 @@ public:
     FileSystem() {
         raiz = new Nodo("/", true); // La carpeta raíz
         actual = raiz; // Empezamos en la raíz
+
+          // ---- Crear la papelera en la raíz ---
+        papelera = new Nodo(".papelera", true, raiz);
+        raiz->hijos.push_back(papelera);
     }
 
     // --- COMANDO: mkdir (Crear carpeta) ---
@@ -141,8 +146,10 @@ public:
             return;
         }
         for (Nodo* hijo : actual->hijos) {
-            if (hijo->esCarpeta) cout << "[D] " << hijo->nombre << endl; // [D]irectory
-            else                 cout << "[F] " << hijo->nombre << endl; // [F]ile
+            if (hijo ->nombre == ".papelera") continue;
+
+            if (hijo->esCarpeta) cout << "[C] " << hijo->nombre << endl; // [C]arpeta
+            else                 cout << "[A] " << hijo->nombre << endl; // [A]rchivo
         }
     }
 
@@ -182,23 +189,41 @@ public:
     }
 
     // --- NUEVO: COMANDO rm (Eliminar) ---
-    void rm(string nombre) {
-        for (auto it = actual->hijos.begin(); it != actual->hijos.end(); ++it) {
+void rm(string nombre) {
+        // Buscar el nodo a eliminar
+        auto it = actual->hijos.begin();
+        while (it != actual->hijos.end()) {
             if ((*it)->nombre == nombre) {
-                // ¿Es carpeta y no está vacía? (Opcional: Advertencia)
-                // Por ahora lo borramos directo
-                delete *it; // Llama al destructor del Nodo
-                actual->hijos.erase(it); // Lo quita de la lista del padre
-                cout << "Elemento '" << nombre << "' eliminado.\n";
+                Nodo* nodoABorrar = *it;
+
+                // CASO 1: Si ya estamos en la papelera, BORRAR DEFINITIVAMENTE
+                if (actual == papelera) {
+                    delete nodoABorrar; // Adiós para siempre (llama al destructor)
+                    actual->hijos.erase(it);
+                    cout << "Elemento '" << nombre << "' eliminado permanentemente.\n";
+                }
+                // CASO 2: Enviar a la papelera (Reciclar)
+                else {
+                    // Desconectamos del padre actual
+                    actual->hijos.erase(it);
+
+                    // Conectamos a la papelera
+                    nodoABorrar->padre = papelera;
+                    papelera->hijos.push_back(nodoABorrar);
+
+                    cout << "Elemento enviado a la papelera (.papelera).\n";
+                    cout << "Tip: Ve a la raiz y entra a .papelera para verlo.\n";
+                }
                 return;
             }
+            ++it;
         }
         cout << "Error: No se encontro '" << nombre << "'.\n";
     }
 
     // --- NUEVO: COMANDO mv (Mover) ---
     // Mueve un archivo/carpeta a otro destino (puede ser ".." o una carpeta hija)
-    void mv(string nombreOrigen, string nombreDestino) {
+void mv(string nombreOrigen, string nombreDestino) {
         Nodo* nodoMover = nullptr;
         int indexMover = -1;
 
@@ -236,6 +261,26 @@ public:
             cout << "Error: Destino '" << nombreDestino << "' no valido.\n";
             return;
         }
+
+        // --- NUEVAS VALIDACIONES DE SEGURIDAD (Día 7) ---
+
+        // A. Evitar mover una carpeta sobre sí misma
+        if (nodoMover == nodoDestino) {
+             cout << "Error: No puedes mover una carpeta sobre si misma.\n";
+             return;
+        }
+
+        // B. Evitar mover una carpeta DENTRO de una de sus propias subcarpetas
+        // (Esto evita bucles infinitos que rompen el programa)
+        Nodo* temp = nodoDestino;
+        while (temp != nullptr) {
+            if (temp == nodoMover) {
+                cout << "Error: No puedes mover una carpeta dentro de sus propias subcarpetas.\n";
+                return;
+            }
+            temp = temp->padre; // Subimos un nivel para seguir revisando
+        }
+        // ------------------------------------------------
 
         // 3. Mover (Desconectar de aquí y conectar allá)
         // Borrar del vector actual (pero NO delete memoria, porque queremos conservarlo)
