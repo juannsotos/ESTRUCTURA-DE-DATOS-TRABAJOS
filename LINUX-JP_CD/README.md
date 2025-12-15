@@ -7,7 +7,7 @@
 - Carlos Daniel Delgado Villareal
 
 ## Descripción
-Simulador de consola de comandos (Linux/CMD) implementado en C++ utilizando árboles generales.
+Simulador de consola de comandos (Linux/CMD) implementado en C++ utilizando arboles generales.
 
 ## Comandos soportados (Avance Día 1-3)
 - `mkdir <nombre>`: Crea una carpeta.
@@ -49,4 +49,25 @@ Simulador de consola de comandos (Linux/CMD) implementado en C++ utilizando árb
   - Se blindó el comando `mv` para evitar paradojas lógicas:
     - No se puede mover una carpeta dentro de si misma.
     - No se puede mover una carpeta a una de sus subcarpetas (evita bucles infinitos en el arbol).
+
+### Interfaz y Experiencia de Usuario (Día 8-9)
+
+- **Prompt Dinámico:**
+  - Se implemento un prompt estilo UNIX (`usuario@consola:/ruta $`) que se actualiza en tiempo real mostrando la ubicación actual del usuario en el arbol de directorios.
+  
+- **Intérprete de Comandos Mejorado:**
+  - Uso de `getline` y `stringstream` para permitir nombres de archivos y carpetas con **espacios** (ej: `mkdir Mi Nueva Carpeta`).
+  - Limpieza de inputs (trim) para evitar errores por espacios accidentales.
+
+- **Comandos de Utilidad:**
+  - `cls`: Limpia la pantalla de la consola para mantener el área de trabajo ordenada.
+  - `help`: Despliega la lista completa de comandos disponibles y su sintaxis.
+  - `exit`: Cierra la aplicación de forma segura.
+
+### Limitaciones Conocidas
+- **Espacios en el comando `mv`:**
+  Debido a la ambigüedad en la separación de argumentos, el comando `mv` (mover) actualmente **no soporta nombres con espacios**.
+  - *Incorrecto:* `mv mi archivo carpeta destino`
+  - *Correcto:* `mv mi_archivo carpeta_destino` (o usar nombres sin espacios para mover).
+  - *Solución futura:* Implementar lectura de argumentos entre comillas (`"origen" "destino"`).
 

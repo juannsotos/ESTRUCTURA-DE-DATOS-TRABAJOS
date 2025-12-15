@@ -175,6 +175,19 @@ public:
         cout << "Error: Directorio no encontrado.\n";
     }
 
+    // --- NUEVO (Día 8): Obtener ruta para el prompt ---
+    string obtenerRutaActual() {
+        if (actual == raiz) return "/";
+
+        string ruta = "";
+        Nodo* temp = actual;
+        while (temp != raiz) {
+            ruta = "/" + temp->nombre + ruta;
+            temp = temp->padre;
+        }
+        return ruta;
+    }
+
     // --- COMANDO: pwd (Mostrar ruta actual) ---
     void pwd() {
         string ruta = "";
