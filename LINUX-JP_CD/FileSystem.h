@@ -71,6 +71,10 @@ private:
         // Crear el nodo actual
         Nodo* nuevo = new Nodo(nombre, esCarpeta, padre);
 
+        if (nombre != "/") {
+            buscador.insertar(nombre);
+        }
+
         if (!esCarpeta && j.contains("contenido")) {
             nuevo->contenido = j["contenido"];
         }
@@ -99,8 +103,8 @@ public:
     void mkdir(string nombre) {
         // Verificar si ya existe
         for (Nodo* hijo : actual->hijos) {
-            if (hijo->nombre == nombre && hijo->esCarpeta) {
-                cout << "Error: La carpeta '" << nombre << "' ya existe.\n";
+            if (hijo->nombre == nombre) {
+                cout << "Error: Ya existe un elemento llamado '" << nombre << "' \n";
                 return;
             }
         }
@@ -114,8 +118,8 @@ public:
     // --- COMANDO: touch (Crear archivo) ---
     void touch(string nombre) {
         for (Nodo* hijo : actual->hijos) {
-            if (hijo->nombre == nombre && !hijo->esCarpeta) {
-                cout << "Error: El archivo '" << nombre << "' ya existe.\n";
+            if (hijo->nombre == nombre) {
+                cout << "Error: Ya existe un elemento llamado '" << nombre << "' \n";
                 return;
             }
         }
@@ -203,6 +207,12 @@ public:
 
     // --- NUEVO: COMANDO rm (Eliminar) ---
 void rm(string nombre) {
+
+        if (nombre == ".papelera") {
+            cout << "Error: No puedes borrar la papelera del sistema.\n";
+            return;
+        }
+
         // Buscar el nodo a eliminar
         auto it = actual->hijos.begin();
         while (it != actual->hijos.end()) {
@@ -211,12 +221,14 @@ void rm(string nombre) {
 
                 // CASO 1: Si ya estamos en la papelera, BORRAR DEFINITIVAMENTE
                 if (actual == papelera) {
+                    buscador.eliminar(nombre);
                     delete nodoABorrar; // Adiós para siempre (llama al destructor)
                     actual->hijos.erase(it);
                     cout << "Elemento '" << nombre << "' eliminado permanentemente.\n";
                 }
                 // CASO 2: Enviar a la papelera (Reciclar)
                 else {
+                    buscador.eliminar(nombre);
                     // Desconectamos del padre actual
                     actual->hijos.erase(it);
 
@@ -275,6 +287,14 @@ void mv(string nombreOrigen, string nombreDestino) {
             return;
         }
 
+        // --- NUEVO BLOQUEO: Evitar Duplicados (Día 10-11) ---
+        for (Nodo* hijo : nodoDestino->hijos) {
+            if (hijo->nombre == nodoMover->nombre) {
+                cout << "Error: Ya existe un archivo llamado '" << nodoMover->nombre << "' en el destino.\n";
+                return;
+            }
+        }
+
         // --- NUEVAS VALIDACIONES DE SEGURIDAD (Día 7) ---
 
         // A. Evitar mover una carpeta sobre sí misma
@@ -311,7 +331,7 @@ void mv(string nombreOrigen, string nombreDestino) {
 
         ofstream archivo("sistema.json");
         if (archivo.is_open()) {
-            archivo << j.dump(4); // El 4 es para que se vea bonito (indentación)
+            archivo << j.dump(4); // El 4 es para que se vea bonito (indentacion)
             archivo.close();
             cout << "Sistema guardado en 'sistema.json'.\n";
         } else {
@@ -324,7 +344,7 @@ void mv(string nombreOrigen, string nombreDestino) {
         ifstream archivo("sistema.json");
         if (archivo.is_open()) {
             json j;
-            archivo >> j; // ¡Aquí la librería hace todo el trabajo difícil!
+            archivo >> j; //
 
             // Borramos el árbol viejo para no encimar datos
             delete raiz;

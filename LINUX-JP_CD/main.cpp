@@ -14,11 +14,16 @@ void limpiarPantalla() {
     #endif
 }
 
-// Función para quitar espacios extra al inicio de un texto
+
+// Función para quitar espacios extra y detectar cadenas vacías
 string trim(string str) {
     size_t first = str.find_first_not_of(' ');
-    if (string::npos == first) return str;
-    return str.substr(first);
+    // Si no encuentra ninguna letra (o sea, son puros espacios), devuelve vacío
+    if (string::npos == first) return "";
+
+    // Si sí hay letras, quita los espacios del final también
+    size_t last = str.find_last_not_of(' ');
+    return str.substr(first, (last - first + 1));
 }
 
 int main() {
@@ -93,6 +98,13 @@ int main() {
         else if (comando == "save") {
             fs.save();
         }
+        // Solo para probar performance
+        else if (comando == "test_boom") {
+            for(int i = 0; i < 1000; i++) {
+                fs.mkdir("carpeta_relleno_" + to_string(i));
+            }
+            cout << "Se crearon 1000 carpetas. Prueba hacer 'ls' o 'save' ahora.\n";
+        }
         else if (comando == "load") {
             fs.load();
         }
@@ -105,6 +117,7 @@ int main() {
                 fs.mv(arg1, arg2);
             }
         }
+
         else {
             cout << "Comando '" << comando << "' no reconocido. Escribe 'help'.\n";
         }

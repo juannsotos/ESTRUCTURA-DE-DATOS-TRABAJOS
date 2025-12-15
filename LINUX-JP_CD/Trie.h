@@ -51,6 +51,20 @@ public:
         temp->finDePalabra = true;
     }
 
+    // --- NUEVO: Función para "borrar" del índice ---
+    void eliminar(string palabra) {
+        TrieNodo* temp = raiz;
+        for (char c : palabra) {
+            // Si no encontramos el camino, la palabra no existe
+            if (temp->hijos.find(c) == temp->hijos.end()) {
+                return;
+            }
+            temp = temp->hijos[c];
+        }
+        // Al llegar al final, simplemente decimos "ya no es fin de palabra"
+        temp->finDePalabra = false;
+    }
+
     // Autocompletar: Buscar palabras que empiecen con "prefijo"
     vector<string> buscarPorPrefijo(string prefijo) {
         vector<string> resultados;

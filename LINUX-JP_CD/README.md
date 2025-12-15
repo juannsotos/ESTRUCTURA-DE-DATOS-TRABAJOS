@@ -1,73 +1,116 @@
-# Proyecto: FileSystem con Árboles Generales
+# Simulador de FileSystem en C++
 
-**Materia:** Estructura de Datos
-
+**Materia:** Estructura de Datos  
 **Integrantes:**
 - Juan Pablo Flores Soto
 - Carlos Daniel Delgado Villareal
 
-## Descripción
-Simulador de consola de comandos (Linux/CMD) implementado en C++ utilizando arboles generales.
+---
 
-## Comandos soportados (Avance Día 1-3)
-- `mkdir <nombre>`: Crea una carpeta.
-- `touch <nombre>`: Crea un archivo.
-- `ls`: Muestra el contenido del directorio actual.
-- `cd <nombre>`: Navega entre carpetas.
-- `rm <nombre>`: Elimina la carpeta o archivo
-- `mv <origen> <destino>`: Mueve un archivo o carpeta a otra ubicacion
+## 1. Descripción del Proyecto
+Este proyecto consiste en un simulador de consola de comandos (estilo Linux/Bash) desarrollado en C++. 
+El sistema gestiona una jerarquía de archivos y directorios utilizando estructuras de datos avanzadas para garantizar eficiencia y persistencia.
 
-## Comandos de Persistencia (Dia 4)
-- `save`: Guarda todo el estado actual del sistema de archivos en el disco duro.
-  - Utiliza formato **JSON** (`sistema.json`) para mantener la estructura de datos.
-  - Permite cerrar el programa sin perder los datos creados.
+### Tecnologías y Estructuras Utilizadas:
+- **Árbol N-ario:** Para la estructura jerárquica de carpetas y archivos.
+- **Trie (Árbol de Prefijos):** Para el motor de búsqueda y autocompletado instantáneo.
+- **JSON (nlohmann/json):** Para la persistencia de datos (Guardar/Cargar).
+- **Pilas/Colas:** Implícitas en la recursividad de las operaciones.
 
-- `load`: Carga un estado previamente guardado desde `sistema.json`.
-  - Restaura el arbol de directorios exactamente como estaba la ultima vez.
-  - **Nota:** Al usar este comando, se borra cualquier cambio no guardado en la sesión actual para reemplazarlo con la versión del archivo.
+---
 
-### Búsqueda Inteligente (Día 5-6)
+## 2. Instrucciones de Compilación y Ejecución
 
-- `search <prefijo>`: Busca y lista todos los archivos o carpetas que comiencen con las letras indicadas.
-  - **Estructura de Datos:** Implementado mediante un **Trie (Árbol de Prefijos)**. Esto permite encontrar coincidencias de manera inmediata sin tener que recorrer todo el arbol de carpetas una por una.
-  - **Autocompletado:** Funciona como un motor de sugerencias; si escribes `search m`, el sistema te devolverá todo lo que empiece con "m" (ej: `musica`, `memes`, `main.cpp`).
+### Requisitos
+- Compilador de C++ compatible con el estándar C++11 o superior.
+- Librería `json.hpp` (incluida en el proyecto).
 
-### Gestión de Archivos y Robustez (Día 7)
+### Pasos en Code::Blocks
+1. Abrir el archivo del proyecto `.cbp` o el `main.cpp`.
+2. Ir a **Settings** -> **Compiler**.
+3. Compilar y Correr (Build and Run).
 
-- **Papelera de Reciclaje (`.papelera`):**
-  - Se implementó un sistema de "borrado seguro". El comando `rm` ahora mueve los archivos a una carpeta oculta llamada `.papelera` en lugar de eliminarlos permanentemente.
-  - **Nota importante:** Si se ejecuta `rm` sobre un archivo que *ya está* dentro de la papelera, entonces sí se elimina de la memoria definitivamente.
+---
 
-- **Acceso a la Papelera:**
-  - La carpeta `.papelera` se encuentra ubicada en la **raíz (`/`)** del sistema.
-  - Para ver los archivos borrados, el usuario debe navegar manualmente:
-    1. Ir a la raíz: `cd ..` (repetidas veces)
-    2. Entrar a la carpeta: `cd .papelera`
-    3. Listar archivos: `ls`
+## 3. Manual de Comandos
 
-- **Validaciones de Seguridad (Manejo de Errores):**
-  - Se blindó el comando `mv` para evitar paradojas lógicas:
-    - No se puede mover una carpeta dentro de si misma.
-    - No se puede mover una carpeta a una de sus subcarpetas (evita bucles infinitos en el arbol).
+### Gestión de Archivos y Directorios
+| Comando | Descripción | Ejemplo |
+|:---|:---|:---|
+| `mkdir <nombre>` | Crea una nueva carpeta. Admite espacios. | `mkdir Tarea de Mate` |
+| `touch <nombre>` | Crea un nuevo archivo. Admite espacios. | `touch notas.txt` |
+| `rm <nombre>` | Envía un archivo o carpeta a la **Papelera de Reciclaje**. | `rm archivo_viejo` |
+| `mv <origen> <destino>` | Mueve un elemento a otra ruta. **(No admite espacios)**. | `mv notas.txt carpeta_final` |
 
-### Interfaz y Experiencia de Usuario (Día 8-9)
+**Soporte de Nombres con Espacios:**
+![Creación de Carpetas](Imagenes/foto_espacios.png)
 
-- **Prompt Dinámico:**
-  - Se implemento un prompt estilo UNIX (`usuario@consola:/ruta $`) que se actualiza en tiempo real mostrando la ubicación actual del usuario en el arbol de directorios.
-  
-- **Intérprete de Comandos Mejorado:**
-  - Uso de `getline` y `stringstream` para permitir nombres de archivos y carpetas con **espacios** (ej: `mkdir Mi Nueva Carpeta`).
-  - Limpieza de inputs (trim) para evitar errores por espacios accidentales.
+### Navegación
+| Comando | Descripción | Ejemplo |
+|:---|:---|:---|
+| `ls` | Lista el contenido del directorio actual (Carpetas [D] y Archivos [F]). | `ls` |
+| `cd <nombre>` | Entra a una carpeta. Usa `..` para regresar. | `cd ..` o `cd musica` |
+| `pwd` | Muestra la ruta absoluta actual en el sistema. | `pwd` |
 
-- **Comandos de Utilidad:**
-  - `cls`: Limpia la pantalla de la consola para mantener el área de trabajo ordenada.
-  - `help`: Despliega la lista completa de comandos disponibles y su sintaxis.
-  - `exit`: Cierra la aplicación de forma segura.
+**Vista de la Interfaz y Menú de Ayuda:**
+![Interfaz Principal](Imagenes/foto_menu.png)
 
-### Limitaciones Conocidas
-- **Espacios en el comando `mv`:**
-  Debido a la ambigüedad en la separación de argumentos, el comando `mv` (mover) actualmente **no soporta nombres con espacios**.
-  - *Incorrecto:* `mv mi archivo carpeta destino`
-  - *Correcto:* `mv mi_archivo carpeta_destino` (o usar nombres sin espacios para mover).
-  - *Solución futura:* Implementar lectura de argumentos entre comillas (`"origen" "destino"`).
+### Búsqueda Avanzada (Trie)
+| Comando | Descripción | Ejemplo |
+|:---|:---|:---|
+| `search <prefijo>` | Busca instantáneamente cualquier archivo/carpeta que empiece con el texto indicado. | `search ta` (encuentra 'tarea', 'tambor') |
 
+**Demostración del Buscador Inteligente:**
+![Búsqueda por Prefijo](Imagenes/foto_busqueda.png)
+
+### Persistencia (JSON)
+| Comando | Descripción |
+|:---|:---|
+| `save` | Guarda el estado actual del árbol en `sistema.json`. |
+| `load` | Carga el estado desde el archivo, restaurando la sesión anterior. |
+
+### Sistema y Utilidades
+| Comando | Descripción |
+|:---|:---|
+| `cls` | Limpia la pantalla de la consola. |
+| `help` | Muestra la lista de comandos disponibles. |
+| `exit` | Cierra el programa de forma segura. |
+
+---
+
+## 4. Características Especiales
+
+### Sistema de Papelera de Reciclaje
+El comando `rm` no elimina los archivos permanentemente de inmediato.
+1. Los mueve a una carpeta oculta `.papelera` ubicada en la raíz.
+2. Para recuperar un archivo, el usuario puede entrar (`cd .papelera`) y moverlo (`mv`).
+3. Para eliminarlo definitivamente, se debe ejecutar `rm` dentro de la papelera.
+
+**Prueba de Funcionamiento de la Papelera:**
+![Papelera de Reciclaje](Imagenes/foto_papelera.png)
+
+### Validaciones de Seguridad (Robustez)
+- **Prevención de Ciclos:** El sistema impide mover una carpeta dentro de sí misma o de sus subcarpetas, evitando bucles infinitos en el árbol.
+- **Manejo de Errores:** Mensajes claros cuando no se encuentran archivos o rutas.
+
+---
+
+## 5. Reporte de Pruebas (QA) y Rendimiento
+
+**Pruebas de Integración:**
+- [x] **Persistencia:** Se verificó el ciclo completo `Crear -> Guardar -> Borrar Memoria -> Cargar`. El sistema restaura correctamente la jerarquía.
+- [x] **Sincronización Trie:** Se comprobó que al borrar un archivo con `rm`, este desaparece correctamente de los resultados de búsqueda (`search`).
+- [x] **Papelera:** Los archivos persisten en `.papelera` hasta su eliminación manual.
+
+**Pruebas de Estrés (Performance):**
+- Se realizó una inserción masiva de **1,000 nodos** simultáneos.
+- **Resultados:**
+  - Tiempo de respuesta de `ls`: Inmediato.
+  - Tiempo de respuesta de `search`: Inmediato (gracias a la indexación del Trie).
+  - Estabilidad del JSON: Correcta escritura y lectura de archivos de gran tamaño.
+
+---
+
+## 6. Limitaciones Conocidas
+1. **Espacios en el comando `mv`:** Debido a la ambigüedad en la lectura de argumentos, el comando mover no soporta nombres con espacios (ej: `mv mi archivo destino` fallará). Se recomienda usar guiones bajos o nombres simples para esta operación.
+2. **Restaurar automático:** No existe un comando `restore`. La recuperación de archivos de la papelera debe hacerse manualmente con `mv`.
