@@ -37,6 +37,11 @@
 		</Unit>
 		<Unit filename="Trie.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="pruebas.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

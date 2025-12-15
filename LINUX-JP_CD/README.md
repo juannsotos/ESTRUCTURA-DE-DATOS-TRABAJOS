@@ -43,7 +43,7 @@ El sistema gestiona una jerarquía de archivos y directorios utilizando estructu
 | `mv <origen> <destino>` | Mueve un elemento a otra ruta. **(No admite espacios)**. | `mv notas.txt carpeta_final` |
 
 **Soporte de Nombres con Espacios:**
-![Creación de Carpetas](Imagenes/foto_espacios.png)
+![Creación de Carpetas](Imagenes/espacios.png)
 
 ### Navegación
 | Comando | Descripción | Ejemplo |
