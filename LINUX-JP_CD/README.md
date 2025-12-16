@@ -48,7 +48,7 @@ El sistema gestiona una jerarquía de archivos y directorios utilizando estructu
 ### Navegación
 | Comando | Descripción | Ejemplo |
 |:---|:---|:---|
-| `ls` | Lista el contenido del directorio actual (Carpetas [D] y Archivos [F]). | `ls` |
+| `ls` | Lista el contenido del directorio actual (Carpetas [C] y Archivos [F]). | `ls` |
 | `cd <nombre>` | Entra a una carpeta. Usa `..` para regresar. | `cd ..` o `cd musica` |
 | `pwd` | Muestra la ruta absoluta actual en el sistema. | `pwd` |
 
